@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextAdventure-DS9", "TextAdventure-DS9.csproj", "{6ABDCDE5-983F-4195-B7E2-3EF54584ED94}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{036C340B-19B8-4B7C-B766-E9F809F1CBE8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6ABDCDE5-983F-4195-B7E2-3EF54584ED94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6ABDCDE5-983F-4195-B7E2-3EF54584ED94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6ABDCDE5-983F-4195-B7E2-3EF54584ED94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6ABDCDE5-983F-4195-B7E2-3EF54584ED94}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3F702A24-2279-42BE-9699-A3386BE2F6FE}
+	EndGlobalSection
+EndGlobal
