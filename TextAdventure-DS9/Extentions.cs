@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
+
 
 namespace TextAdventure_DS9
 {
@@ -11,7 +13,7 @@ namespace TextAdventure_DS9
         /// <summary>
         /// Into text with the title and author.
         /// </summary>
-        private static string[] intro = new string[] { "A Deep Space 9 Textadventure Game", "C# Eindopdracht", "Lisa Werner" };
+        private static string[] intro = new string[] { "A Deep Space 9 Textadventure Game", "C# Eindopdracht", "CrazyPumpkin" };
 
         /// <summary>
         /// ASCII art. String array.
@@ -59,21 +61,22 @@ namespace TextAdventure_DS9
         private static char horizontalEdges = (char)9552;
 
         /// <summary>
-        /// Initialize the console. Set the size and display the ASCII art and the intro text.
+        /// Returns a capitalized string.
         /// </summary>
-        /// <param name="width">Optional: The width of the console window. Default value is 150</param>
-        /// <param name="height">Optional: The height of the console window. Default value is 45</param>
-        public static void ConsoleSetup(int width = 150, int height = 45)
+        /// <param name="text">String to capitalize.</param>
+        /// <returns></returns>
+        public static string CapitalizeString(string text)
         {
-            // Set the console size.
-            Console.SetWindowSize(width, height);
-
-            // Display the ASCII.
-            CenterText(ASCII);
-            Console.WriteLine(); // adds one line of spacing
-
-            // Write the intro text.
-            CenterText(intro);
+            if (!string.IsNullOrEmpty(text))
+            {
+                char[] letters = text.ToCharArray();
+                letters[0] = char.ToUpper(letters[0]);
+                return new string(letters);
+            }
+            else
+            {
+                return text;
+            }
         }
 
         /// <summary>
@@ -98,6 +101,41 @@ namespace TextAdventure_DS9
         }
 
         /// <summary>
+        /// Initialize the console. Set the size and display the ASCII art and the intro text.
+        /// </summary>
+        /// <param name="width">Optional: The width of the console window. Default value is 150</param>
+        /// <param name="height">Optional: The height of the console window. Default value is 45</param>
+        public static void ConsoleStartScreen(int width = 150, int height = 45)
+        {
+            // Set the console size.
+            Console.SetWindowSize(width, height);
+
+            // Display the ASCII.
+            CenterText(ASCII);
+            Console.WriteLine(); // adds one line of spacing
+
+            // Write the intro text.
+            CenterText(intro);
+
+            // Press enter to continue
+            Continue();
+            Console.Clear();
+        }
+
+        /// <summary>
+        /// Check if the user pressed a certain input to continue.
+        /// </summary>
+        /// <param name="pressToContinue">Key that needs to be pressed</param>
+        public static void Continue(ConsoleKey pressToContinue = ConsoleKey.Enter, string pressToContinueMessage = "Press Enter to continue.")
+        {
+            if (Console.ReadKey(true).Key != pressToContinue)
+            {
+                Console.WriteLine(pressToContinueMessage);
+                Continue();
+            }
+        }
+
+        /// <summary>
         /// Draws a symbol along the width of the console. 
         /// </summary>
         /// <param name="symbol">Which symbol to draw</param>
@@ -116,12 +154,14 @@ namespace TextAdventure_DS9
         /// <param name="playerDepartment"></param>
         /// <param name="playerCurrentHealth"></param>
         /// <param name="playerMaxHealth"></param>
-        public static void UI(string playerName, string playerDepartment, int playerCurrentHealth, int playerMaxHealth)
+        public static void UI(string playerName, string playerDepartment, int playerStrength, int playerMaxHealth, int playerCurrentHealth)
         {
             DrawLine(horizontalEdges);
-            Console.WriteLine(playerName);
-            Console.WriteLine(playerDepartment);
-            Console.WriteLine($"{playerCurrentHealth}/{playerMaxHealth}");
+            Console.Write(String.Format("{0," + ((Console.WindowWidth / 6) + (playerDepartment.Length / 2)) + "}", CapitalizeString(playerName)));
+            Console.Write(String.Format("{0," + ((Console.WindowWidth / 6) + (playerDepartment.Length / 2)) + "} Department", CapitalizeString(playerDepartment)));
+            string strength = $"Strength: {playerStrength}";
+            Console.Write(String.Format("{0," + ((Console.WindowWidth / 6) + (strength.Length / 2)) + "}", strength));
+            Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 6) + (playerCurrentHealth.ToString().Length / 2)) + "}/{1} HP", playerCurrentHealth, playerMaxHealth));
             DrawLine(horizontalEdges);
         }
 
@@ -132,13 +172,12 @@ namespace TextAdventure_DS9
         /// <returns></returns>
         public static string PromtForInput(string prompt)
         {
-            Console.Clear();
-            Console.WriteLine(prompt);
+            Console.WriteLine();
+            Console.Write(prompt);
             string input = Console.ReadLine().ToLower();
 
             if (!string.IsNullOrEmpty(input))
             {
-                Continue();
                 return input;
             }
             else
@@ -149,17 +188,5 @@ namespace TextAdventure_DS9
             }
         }
 
-        /// <summary>
-        /// Check if the user pressed a certain input to continue.
-        /// </summary>
-        /// <param name="pressToContinue">Key that needs to be pressed</param>
-        public static void Continue(ConsoleKey pressToContinue = ConsoleKey.Enter, string pressToContinueMessage = "Press Enter to continue.")
-        {
-            if (Console.ReadKey(true).Key != pressToContinue)
-            {
-                Console.WriteLine(pressToContinueMessage);
-                Continue();
-            }
-        }
     }
 }
