@@ -166,11 +166,12 @@ namespace TextAdventure_DS9
         }
 
         /// <summary>
-        /// Writes an input promt. Checks if the users input is not empty.
+        /// Writes an input promt. Checks if the users input is not empty. Returns a lowercase string.
         /// </summary>
         /// <param name="prompt">Promt message</param>
+        /// <param name="errorMessage">Message to display on invalid input.</param>
         /// <returns></returns>
-        public static string PromtForInput(string prompt)
+        public static string PromtForInput(string prompt, string errorMessage = null)
         {
             Console.WriteLine();
             Console.Write(prompt);
@@ -182,9 +183,9 @@ namespace TextAdventure_DS9
             }
             else
             {
-                Console.Write("Invalid input! Your name can't be empty.");
+                Console.Write(errorMessage);
                 Continue();
-                return PromtForInput(prompt);
+                return PromtForInput(prompt, errorMessage);
             }
         }
 

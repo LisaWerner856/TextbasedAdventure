@@ -53,7 +53,7 @@ namespace TextAdventure_DS9
             inventory.Add(new Item("Tricorder", "Versitile, portable sensing device."));
             inventory.Add(new Item("Combadge", "Multi-purpose communications and universal translation device."));
 
-            Name = Extentions.PromtForInput("Please enter your name: ");
+            Name = Extentions.PromtForInput("Please enter your name: ", "Your name can't be empty!");
             
             Department = SelectProfession(departments);
         }

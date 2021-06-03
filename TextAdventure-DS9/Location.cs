@@ -39,10 +39,17 @@ namespace TextAdventure_DS9
                 Console.WriteLine($"{Description[i]}");
             }
 
-            // Show items at location
-            for (int i = 0; i < Items.Count; i++)
+            if (Items != null)
             {
-                Console.WriteLine(Items[i].Name);
+                // Show items at location
+                for (int i = 0; i < Items.Count; i++)
+                {
+                    Console.WriteLine(Items[i].Description);
+                }
+            }
+            else
+            {
+                Console.WriteLine("You don't see anything of interesst here.");
             }
 
         }

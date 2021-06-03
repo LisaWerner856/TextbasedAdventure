@@ -14,14 +14,14 @@ namespace TextAdventure_DS9
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            Extentions.ConsoleStartScreen();
-
             Game game = new Game();
+
             game.Start();
+            while (game.isRunning)
+            {
+                game.Update();
+            }
 
-            game.GameLoop();
-
-            Console.ReadKey();
         }
     }
 
