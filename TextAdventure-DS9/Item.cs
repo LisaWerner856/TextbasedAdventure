@@ -21,5 +21,10 @@ namespace TextAdventure_DS9
             Ammount = ammount;
         }
 
+        public string GetItemName()
+        {
+            return Name.ToLower();
+        }
+
 	}
 }

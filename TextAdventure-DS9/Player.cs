@@ -37,7 +37,7 @@ namespace TextAdventure_DS9
         /// <summary>
         /// Items the player is carrying.
         /// </summary>
-        public List<Item> inventory = new List<Item>();
+        public List<Item> Inventory = new List<Item>();
 
         public string[] Actions = new string[] { "take", "pickup", "use" };
 
@@ -49,9 +49,9 @@ namespace TextAdventure_DS9
         public Player(string[] departments)
         {
             // Standart Starfleet equiptment 
-            inventory.Add(new Item("Phaser", "A standard Starfleed issued phaser."));
-            inventory.Add(new Item("Tricorder", "Versitile, portable sensing device."));
-            inventory.Add(new Item("Combadge", "Multi-purpose communications and universal translation device."));
+            Inventory.Add(new Item("Phaser", "A standard Starfleed issued phaser."));
+            Inventory.Add(new Item("Tricorder", "Versitile, portable sensing device."));
+            Inventory.Add(new Item("Combadge", "Multi-purpose communications and universal translation device."));
 
             Name = Extentions.PromtForInput("Please enter your name: ", "Your name can't be empty!");
             
@@ -132,30 +132,155 @@ namespace TextAdventure_DS9
 
 
         // Player action - collect item
-        public void CollectItem(Location location, Item item)
+        /// <summary>
+        /// Take an item. Check if item exists at current location.
+        /// </summary>
+        /// <param name="currentLocation">The current location of the player</param>
+        /// <param name="input">Player input</param>
+        /// <param name="validCommands">Array of valid commands to execute this action</param>
+        /// <param name="message">Message if the command needs more informations. Example: Input = take. Message = What do you want to take?</param>
+        public void TakeItem(Location currentLocation, string input, string[] validCommands, string message)
         {
-            location.Items.Remove(item);
-            inventory.Add(item);
-        }
-
-        // Player action - drop item
-        public void DropIem(Location location, Item item)
-        {
-            if (inventory.Contains(item))
+            // loop over all valid commands for taking an item.
+            foreach (string command in validCommands)
             {
-                location.Items.Add(item);
-                inventory.Remove(item);
+                // checks for the command at the start of the player input.
+                if (input.Length >= command.Length && input.Substring(0, command.Length) == command)
+                {
+                    //If only the command was entered, promt a message for the user to specify which object they would like to pick up.
+                    if (input == command)
+                    {
+                        Console.WriteLine(message);
+                        return;
+                    }
+
+                    // Check if the item exists in the current location
+                    if (currentLocation.Items.Exists(x => x.GetItemName() == input.Substring(command.Length + 1)))
+                    {
+                        foreach (Item item in currentLocation.Items)
+                        {
+                            if (item.Name.ToLower() == input.Substring(command.Length + 1))
+                            {
+                                Console.WriteLine($"\nYou take the {item.GetItemName()}.");
+                                Inventory.Add(item);
+                                currentLocation.Items.Remove(item);
+                                return;
+                            }
+                        }
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("\n" + input.Substring(command.Length + 1) + " does not exist.\n");
+                        return;
+                    }
+                }
             }
         }
 
         // Player action - use  item
-        public void UseItem(Item item)
+        public void UseItem(Location currentLocation, string input, string[] validCommands, string message)
         {
-            if (inventory.Contains(item))
-            { 
-                inventory.Remove(item);
+            // loop over all valid commands for taking an item.
+            foreach (string command in validCommands)
+            {
+                // checks for the command at the start of the player input.
+                if (input.Length >= command.Length && input.Substring(0, command.Length) == command)
+                {
+                    //If only the command was entered, promt a message for the user to specify which object they would like to pick up.
+                    if (input == command)
+                    {
+                        Console.WriteLine(message);
+                        return;
+                    }
+
+                    // Check if the item exists in the players inventory
+                    if (Inventory.Exists(x => x.GetItemName() == input.Substring(command.Length + 1)))
+                    {
+                        foreach (Item item in Inventory)
+                        {
+                            if (item.Name.ToLower() == input.Substring(command.Length + 1))
+                            {
+                                Console.WriteLine($"\nYou remove {item.GetItemName()} from your inventory.");
+                                Inventory.Remove(item);
+                                return;
+                            }
+                        }
+                    }
+
+                    else
+                    {
+                        Console.WriteLine($"You don't have a {input.Substring(command.Length + 1)} in your inventory.");
+                        return;
+                    }
+                }
             }
         }
+
+        /// <summary>
+        /// Drops item from player inventory into their current location.
+        /// </summary>
+        /// <param name="currentLocation"></param>
+        /// <param name="input"></param>
+        /// <param name="validCommands"></param>
+        /// <param name="message"></param>
+        public void DropItem(Location currentLocation, string input, string[] validCommands, string message)
+        {
+            // loop over all valid commands for taking an item.
+            foreach (string command in validCommands)
+            {
+                // checks for the command at the start of the player input.
+                if (input.Length >= command.Length && input.Substring(0, command.Length) == command)
+                {
+                    //If only the command was entered, promt a message for the user to specify which object they would like to pick up.
+                    if (input == command)
+                    {
+                        Console.WriteLine(message);
+                        return;
+                    }
+
+                    // Check if the item exists in the current location
+                    if (Inventory.Exists(x => x.GetItemName() == input.Substring(command.Length + 1)))
+                    {
+                        foreach (Item item in currentLocation.Items)
+                        {
+                            if (item.GetItemName() == input.Substring(command.Length + 1))
+                            {
+                                Console.WriteLine($"\nYou dropped {item.Name}.");
+                                Inventory.Remove(item);
+                                currentLocation.Items.Add(item);
+                                return;
+                            }
+                        }
+                    }
+
+                    else
+                    {
+                        Console.WriteLine($"You don't have a {input.Substring(command.Length + 1)} in your inventory.");
+                        return;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Prints the contents of the players inventory.
+        /// </summary>
+        /// <returns>Returns a string with the inventory contents.</returns>
+        public string GetInventory()
+        {
+            string inventoryContent = "";
+
+            foreach (Item item in Inventory)
+            {
+                inventoryContent += $"{item.Name}\n";
+            }
+            return inventoryContent;
+        }
+
+        
+
+        
 
     }
 }

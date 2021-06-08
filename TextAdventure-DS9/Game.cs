@@ -33,7 +33,7 @@ namespace TextAdventure_DS9
         /// </summary>
         public List<Location> locations = new List<Location>();
         private 
-            int locationIndex = 0;
+            int currentLocation = 0;
         /// <summary>
         /// Setting up the things needed for the Game
         /// </summary>
@@ -41,8 +41,13 @@ namespace TextAdventure_DS9
         public void Start()
         {
             isRunning = true;
+
             #region Location 0: Turbolift 
-            Location turbolift = new Location("Turbolift", new string[] { "An empty turbolift." });
+            List<Item> itemsTesting = new List<Item>();
+            itemsTesting.Add(new Item("Rock", "It's a rock."));
+            itemsTesting.Add(new Item("Stick", "It's a stick."));
+            itemsTesting.Add(new Item("Postcard", "It's a random postcard."));
+            Location turbolift = new Location("Turbolift", new string[] { "An empty turbolift." }, itemsTesting);
             locations.Add(turbolift);
             #endregion
 
@@ -76,124 +81,79 @@ namespace TextAdventure_DS9
             {
                 Console.WriteLine(intro[i]);
             }
-            locations[locationIndex].ShowLocation();
+            locations[currentLocation].ShowLocation();
         }
 
         /// <summary>
-        /// 
+        /// Called when a new game loop starts.
         /// </summary>
         public void Update()
         {
             string input = Extentions.PromtForInput("");
 
+            //Action(input, locations[currentLocation]);
+
+            // Player adds item to their inventory and removes the item from the location.
+            player.TakeItem(locations[currentLocation], input, new string[] { "take", "pick up", "pickup" }, "\nPlease specify what you would like to take.\n");
+
+            // Player removes item from their inventory and adds the item to the location.
+            player.DropItem(locations[currentLocation], input, new string[] { "drop" }, "\nPlease specify what you would like to take.\n");
+
+            // Player removes item from their inventory. 
+            player.UseItem(locations[currentLocation], input, new string[] { "use" }, "\nPlease specify what you would like to use.\n");
+
             switch (input)
             {
+                // Quit the game.
                 case "q":
                 case "quit":
                     isRunning = false;
                     break;
 
+                // Display player inventory.
                 case "inventory":
                 case "i":
-                    foreach (Item item in player.inventory)
+                    foreach (Item item in player.Inventory)
                     {
                         Console.WriteLine(item.Name);
                     }
                     break;
 
+                // Write the location description and items at the location.
                 case "look around":
+                case "l":
                 case "location":
-                    locations[locationIndex].ShowLocation();
+                    locations[currentLocation].ShowLocation();
                     break;
 
+                // Player dies and it's Game over. Closes the game.
                 case "die":
+                case "commit suicide":
+                case "kill myself":
                     // make the player die based on a random death based on an array
-                    Console.WriteLine("You ");
+                    Console.WriteLine("You die");
+                    isRunning = false;
                     break;
+
+                // TODO: Interact with the items.
                 case "use":
+                    Console.WriteLine("Work in Progress");
                     Console.WriteLine("Please specify what you want to use.");
                     break;
 
                 default:
-                    break;
-            }
-
-            switch (input.Substring(0, input.Length))
-            {
-                case "my quarters":
-                case "go to quarters":
-                case "go to my quarters":
-                    MoveLocation(1);
-                    break;
-
-                case "promenade":
-                case "go to promenade":
-                    MoveLocation(2);
-                    break;
-                default:
-                    Console.WriteLine("You hear a robotic voice: 'Please state your destination'.");
+                    //Console.WriteLine("Unknown command. Enter 'help'/'h' for more information.");
                     break;
             }
         }
-        private void MoveLocation(int nextLocation)
+
+
+        private void MoveLocation(int currentLocaiton, int nextLocation)
         {
-            locationIndex = nextLocation;
+            currentLocation = nextLocation;
             Console.Clear();
             Extentions.UI(player.Name, player.Department, player.Strenght, player.Health, player.MaxHealth);
-            locations[locationIndex].ShowLocation();
-        }
-
-        /// <summary>
-        /// GameLoop method. Game begins here.
-        /// </summary>
-        /// <param name="locationIndex"> Starting location </param>
-        public void GameLoop(int locationIndex = 0)
-        {
-            // Clear console and display UI
-            Console.Clear();
-            Extentions.UI(player.Name, player.Department, player.Strenght, player.Health, player.MaxHealth);
-
-
-            // Show location 
-            locations[locationIndex].ShowLocation();
-
-
-            // Take user input 
-            while (isRunning)
-            {
-                string input = Console.ReadLine().ToLower();
-
-                switch (input)
-                {
-                    case "q":
-                    case "quit":
-                    case "exit":
-                    case "close":
-                        isRunning = false;
-                        break;
-
-                    case "inventory":
-                    case "items":
-                        foreach (Item item in player.inventory)
-                        {
-                            Console.WriteLine(item.Name);
-                        }
-                        break;
-
-                    case "look around":
-                    case "location":
-                        locations[locationIndex].ShowLocation();
-                        break;
-
-
-                    case "use":
-                        Console.WriteLine("Please specify what you want to use.");
-                        break;
-
-                    default:
-                        break;
-                }
-            }
+            locations[currentLocation].ShowLocation();
         }
     }
 }
