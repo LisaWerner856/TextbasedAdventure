@@ -63,7 +63,9 @@ namespace TextAdventure_DS9
         public void ShowLocation()
         {
             // Location description
+            Extentions.DrawLine(LocationName.Length);
             Console.WriteLine($"{LocationName}");
+            Extentions.DrawLine(LocationName.Length);
             for (int i = 0; i < Description.Length; i++)
             {
                 Console.WriteLine($"{Description[i]}");
@@ -83,9 +85,10 @@ namespace TextAdventure_DS9
             }
             if (Exits != null)
             {
+                Console.WriteLine();
                 foreach  (Exit exit in Exits)
                 {
-                    Console.WriteLine(exit.LeadsTo.LocationName);
+                    Console.WriteLine($"║{exit.LeadsTo.LocationName}║");
                 }
             }
 

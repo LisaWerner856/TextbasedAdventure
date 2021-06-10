@@ -13,7 +13,7 @@ namespace TextAdventure_DS9
         /// <summary>
         /// Into text with the title and author.
         /// </summary>
-        private static string[] intro = new string[] { "A Deep Space 9 Textadventure Game", "C# Eindopdracht", "CrazyPumpkin" };
+        private static string[] intro = new string[] { "A Deep Space 9 Textadventure Game", "C# Eindopdracht", "CrazyPumpkin", "\n", "\n", "Press 'Enter' to start" };
 
         /// <summary>
         /// ASCII art. String array.
@@ -58,7 +58,7 @@ namespace TextAdventure_DS9
         /// <summary>
         /// ASCII Character for a double line.
         /// </summary>
-        private static char horizontalEdges = (char)9552;
+        private const char horizontalDoubleLine = (char)9552;
 
         /// <summary>
         /// Returns a capitalized string.
@@ -139,12 +139,24 @@ namespace TextAdventure_DS9
         /// Draws a symbol along the width of the console. 
         /// </summary>
         /// <param name="symbol">Which symbol to draw</param>
-        private static void DrawLine(char symbol)
+        public static void DrawLine(char symbol)
         {
             for (int i = 0; i < Console.WindowWidth; i++)
             {
                 Console.Write(symbol);
             }
+        }
+
+        /// <summary>
+        /// Draws a symbol along the passed width. 
+        /// </summary>
+        public static void DrawLine(int width, char symbol = horizontalDoubleLine)
+        {
+            for (int i = 0; i < width; i++)
+            {
+                Console.Write(symbol);
+            }
+            Console.WriteLine();
         }
 
         /// <summary>
@@ -156,13 +168,13 @@ namespace TextAdventure_DS9
         /// <param name="playerMaxHealth"></param>
         public static void UI(string playerName, string playerDepartment, int playerStrength, int playerMaxHealth, int playerCurrentHealth)
         {
-            DrawLine(horizontalEdges);
+            DrawLine(horizontalDoubleLine);
             Console.Write(String.Format("{0," + ((Console.WindowWidth / 6) + (playerDepartment.Length / 2)) + "}", CapitalizeString(playerName)));
             Console.Write(String.Format("{0," + ((Console.WindowWidth / 6) + (playerDepartment.Length / 2)) + "} Department", CapitalizeString(playerDepartment)));
             string strength = $"Strength: {playerStrength}";
             Console.Write(String.Format("{0," + ((Console.WindowWidth / 6) + (strength.Length / 2)) + "}", strength));
             Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 6) + (playerCurrentHealth.ToString().Length / 2)) + "}/{1} HP", playerCurrentHealth, playerMaxHealth));
-            DrawLine(horizontalEdges);
+            DrawLine(horizontalDoubleLine);
         }
 
         /// <summary>
