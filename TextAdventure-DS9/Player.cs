@@ -41,21 +41,24 @@ namespace TextAdventure_DS9
 
         public string[] Actions = new string[] { "take", "pickup", "use" };
 
+        public int currentLocation { get; private set; }
+
         /// <summary>
         /// Create a new Player.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="department"></param>
-        public Player(string[] departments)
+        public Player(string[] departments, int startingLocation)
         {
             // Standart Starfleet equiptment 
-            Inventory.Add(new Item("Phaser", "A standard Starfleed issued phaser."));
-            Inventory.Add(new Item("Tricorder", "Versitile, portable sensing device."));
-            Inventory.Add(new Item("Combadge", "Multi-purpose communications and universal translation device."));
+            Inventory.Add(new Item("Phaser", "A standard Starfleed issued phaser.", true));
+            Inventory.Add(new Item("Tricorder", "Versitile, portable sensing device.", true));
+            Inventory.Add(new Item("Combadge", "Multi-purpose communications and universal translation device.", false));
 
             Name = Extentions.PromtForInput("Please enter your name: ", "Your name can't be empty!");
             
             Department = SelectProfession(departments);
+            currentLocation = startingLocation;
         }
 
         /// <summary>
@@ -202,6 +205,7 @@ namespace TextAdventure_DS9
                             if (item.Name.ToLower() == input.Substring(command.Length + 1))
                             {
                                 Console.WriteLine($"\nYou remove {item.GetItemName()} from your inventory.");
+                                // TODO: Something happens
                                 Inventory.Remove(item);
                                 return;
                             }
@@ -278,9 +282,54 @@ namespace TextAdventure_DS9
             return inventoryContent;
         }
 
-        
+       /// <summary>
+       /// 
+       /// </summary>
+       /// <param name="input">Player input.</param>
+       /// <param name="validCommands">Array of valid commands to do this action.</param>
+       /// <param name="message">Message to ask the user to specify where they want to go.</param>
+       /// <param name="nextLocation">The locatoin to move to.</param>
+       /// <param name="locations">List of locations in the Game.</param>
+        public void MoveLocation(string input, string[] validCommands, string message, int nextLocation, List<Location> locations)
+        {
+            // loop over all valid commands for moving.
+            foreach (string command in validCommands)
+            {
+                // Check if the input is longer or equal to the command length.
+                // Check it the input (starting at index 0, ending at the last character in the command string) is equal to the command that's looped over right now.
+                if (input.Length >= command.Length && input.Substring(0, command.Length) == command)
+                {
 
-        
+                    //If only the command was entered, promt a message for the user to specify which object they would like to pick up.
+                    if (input == command)
+                    {
+                        Console.WriteLine($"{message}");
+                        return;
+                    }
+                    // Check if the exit exists in the current location
+                    if (locations[currentLocation].Exits.Exists(exit => exit.LeadsTo.LocationName.ToLower() == input.Substring(command.Length + 1)))
+                    {
+                        foreach (Exit exit in locations[currentLocation].Exits)
+                        {
+                            Console.WriteLine($"{exit.LeadsTo.LocationName.ToLower()} == {input.Substring(command.Length + 1)}");
+                            if (exit.LeadsTo.LocationName.ToLower() == input.Substring(command.Length + 1))
+                            {
+                                currentLocation = exit.LeadsTo.LocationIndex;
+                                Console.Clear();
+                                Extentions.UI(Name, Department, Strenght, Health, MaxHealth);
+                                locations[currentLocation].ShowLocation();
+                                return;
+                            }
+                        }
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Location not found!");
+                    }
+                }
+            }
 
+        }
     }
 }

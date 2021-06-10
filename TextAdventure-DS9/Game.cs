@@ -22,7 +22,7 @@ namespace TextAdventure_DS9
             // Setup the Console window
             Extentions.ConsoleStartScreen();
             // Initialize player
-            player = new Player(new string[] { "Command", "Operations", "Science" });
+            player = new Player(new string[] { "Command", "Operations", "Science" }, 0);
 
             // Load Game 
             Start();
@@ -32,8 +32,9 @@ namespace TextAdventure_DS9
         /// List of all Locations.
         /// </summary>
         public List<Location> locations = new List<Location>();
-        private 
-            int currentLocation = 0;
+
+        //private int currentLocation = 0;
+
         /// <summary>
         /// Setting up the things needed for the Game
         /// </summary>
@@ -42,31 +43,34 @@ namespace TextAdventure_DS9
         {
             isRunning = true;
 
-            #region Location 0: Turbolift 
-            List<Item> itemsTesting = new List<Item>();
-            itemsTesting.Add(new Item("Rock", "It's a rock."));
-            itemsTesting.Add(new Item("Stick", "It's a stick."));
-            itemsTesting.Add(new Item("Postcard", "It's a random postcard."));
-            Location turbolift = new Location("Turbolift", new string[] { "An empty turbolift." }, itemsTesting);
+            #region Location: Turbolift 
+            List<Item> itemsTesting = new List<Item> { new Item("Rock", "It's a rock.", true), new Item("Stick", "It's a stick.", true), new Item("Postcard", "It's a random postcard.", false) };
+            Location turbolift = new Location("Turbolift", new string[] { "An empty turbolift." }, 0, itemsTesting);
             locations.Add(turbolift);
             #endregion
 
-            #region Location 1: Player Quarters
+            #region Location: Player Quarters
             List<Item> playerQuartersItems = new List<Item>();
-            playerQuartersItems.Add(new Item("Pillow", "You see a few gray, triangular pillows on the sofa."));
-            playerQuartersItems.Add(new Item("Toothbrush", "There is a toothbrush on the floor.... What..."));
-            Location playerQuarters = new Location("Your Quarters", new string[] { "You are in your quarters.", "You look around you. You can tell this Station was designed by a Cardassian." }, playerQuartersItems);
+            playerQuartersItems.Add(new Item("Pillow", "You see a few gray, triangular pillows on the sofa.", true));
+            playerQuartersItems.Add(new Item("Toothbrush", "There is a toothbrush on the floor.... What...", false));
+            Location playerQuarters = new Location("Quarters", new string[] { "You are in your quarters.", "You look around you. You can tell this Station was designed by a Cardassian." }, 1, playerQuartersItems);
 
             locations.Add(playerQuarters);
             #endregion
 
-            #region Location 2: Promenade
+            #region Location: Promenade
             List<Item> promenadeItems = new List<Item>();
-            promenadeItems.Add(new Item("Coin", "Something on the floor catches your eye. It's a coin."));
-            Location promenade = new Location("Promenade", new string[] { "You are on the promenade.", "It's buzzing with people." }, playerQuartersItems);
+            promenadeItems.Add(new Item("Coin", "Something on the floor catches your eye. It's a coin.", true));
+            Location promenade = new Location("Promenade", new string[] { "You are on the promenade.", "It's buzzing with people." }, 2, playerQuartersItems);
 
             locations.Add(promenade);
             #endregion
+
+            // Add exits
+            turbolift.AddExit(new Exit(playerQuarters));
+            turbolift.AddExit(new Exit(promenade));
+
+            playerQuarters.AddExit(new Exit(turbolift));
 
             Console.Clear();
             Extentions.UI(player.Name, player.Department, player.Strenght, player.Health, player.MaxHealth);
@@ -81,7 +85,7 @@ namespace TextAdventure_DS9
             {
                 Console.WriteLine(intro[i]);
             }
-            locations[currentLocation].ShowLocation();
+            locations[player.currentLocation].ShowLocation();
         }
 
         /// <summary>
@@ -94,19 +98,23 @@ namespace TextAdventure_DS9
             //Action(input, locations[currentLocation]);
 
             // Player adds item to their inventory and removes the item from the location.
-            player.TakeItem(locations[currentLocation], input, new string[] { "take", "pick up", "pickup" }, "\nPlease specify what you would like to take.\n");
+            player.TakeItem(locations[player.currentLocation], input, new string[] { "take", "pick up", "pickup" }, "Please specify what you would like to take.");
 
             // Player removes item from their inventory and adds the item to the location.
-            player.DropItem(locations[currentLocation], input, new string[] { "drop" }, "\nPlease specify what you would like to take.\n");
+            player.DropItem(locations[player.currentLocation], input, new string[] { "drop" }, "Please specify what you would like to take.");
 
             // Player removes item from their inventory. 
-            player.UseItem(locations[currentLocation], input, new string[] { "use" }, "\nPlease specify what you would like to use.\n");
+            player.UseItem(locations[player.currentLocation], input, new string[] { "use" }, "Please specify what you would like to use.");
+
+            // Player moves to a different location.
+            player.MoveLocation(input, new string[] { "go to", "goto", "move to", "moveto" }, "Please specify where you'd like to go.", 1, locations);
 
             switch (input)
             {
                 // Quit the game.
                 case "q":
                 case "quit":
+
                     isRunning = false;
                     break;
 
@@ -123,7 +131,7 @@ namespace TextAdventure_DS9
                 case "look around":
                 case "l":
                 case "location":
-                    locations[currentLocation].ShowLocation();
+                    locations[player.currentLocation].ShowLocation();
                     break;
 
                 // Player dies and it's Game over. Closes the game.
@@ -141,19 +149,13 @@ namespace TextAdventure_DS9
                     Console.WriteLine("Please specify what you want to use.");
                     break;
 
+                //case "test go":
+                //    player.MoveLocation(1, locations);
+                //    break;
                 default:
                     //Console.WriteLine("Unknown command. Enter 'help'/'h' for more information.");
                     break;
             }
-        }
-
-
-        private void MoveLocation(int currentLocaiton, int nextLocation)
-        {
-            currentLocation = nextLocation;
-            Console.Clear();
-            Extentions.UI(player.Name, player.Department, player.Strenght, player.Health, player.MaxHealth);
-            locations[currentLocation].ShowLocation();
         }
     }
 }
