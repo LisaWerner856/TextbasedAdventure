@@ -70,6 +70,19 @@ namespace TextAdventure_DS9
         {
             Health -= damage;
         }
+        public Item RemoveItem(string itemToRemove)
+        {
+            foreach (Item item in Inventory)
+            {
+                if (item.Name.ToLower() == itemToRemove)
+                {
+                    Inventory.Remove(item);
+                    return item;
+                }
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// Select Proffesion method. Chooses a profession based on options in an array.
@@ -213,23 +226,28 @@ namespace TextAdventure_DS9
                             {
                                 Console.WriteLine($"Use {item.GetNameLowercase()} on?");
                                 string secondItem = Console.ReadLine();
-                                switch (secondItem)
-                                {
-                                    case "myself":
-                                        TakeDamage(Health);
-                                        Console.Clear();
-                                        Extentions.UI(Name, Department, Strenght, MaxHealth, Health);
-                                        Extentions.CenterText("You die!");
-                                        Console.ReadKey();
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                if (currentLocation.Items.Exists(x => x.GetNameLowercase() == secondItem))
+                                
+                                if (currentLocation.Items.Exists(i => i.GetNameLowercase() == secondItem) || Inventory.Exists(i => i.GetNameLowercase() == secondItem))
                                 {
                                     Console.WriteLine("You use the item.");
+                                    if (secondItem == "rock" && item.GetNameLowercase() == "phaser")
+                                    {
+                                        Console.WriteLine("You shoot the rock.");
+                                        currentLocation.AddItem(new Item("Molten Rock", "There is molten rock all over the place now...", false));
 
-                                    // TODO: Something happens
+                                        // Remove rock from location inventory or player inventory
+                                        if (currentLocation.Items.Exists(x => x.GetNameLowercase() == secondItem))
+                                        {
+                                            currentLocation.RemoveItem(secondItem);
+
+                                        }
+                                        if (Inventory.Exists(x => x.GetNameLowercase() == secondItem))
+                                        {
+                                            RemoveItem(secondItem);
+                                        }
+
+                                        return;
+                                    }
                                     return;
                                 }
                             }
@@ -297,11 +315,10 @@ namespace TextAdventure_DS9
         /// <returns>Returns a string with the inventory contents.</returns>
         public string GetInventory()
         {
-            string inventoryContent = "";
-
+            string inventoryContent = "Inventory:\n";
             foreach (Item item in Inventory)
             {
-                inventoryContent += $"{item.Name}\n";
+                inventoryContent += $"- {item.Name}\n";
             }
             return inventoryContent;
         }

@@ -168,13 +168,16 @@ namespace TextAdventure_DS9
         /// <param name="playerMaxHealth"></param>
         public static void UI(string playerName, string playerDepartment, int playerStrength, int playerMaxHealth, int playerCurrentHealth)
         {
-            DrawLine(horizontalDoubleLine);
+            // Line: 176
+            DrawLine('░');
+            Console.WriteLine();
             Console.Write(String.Format("{0," + ((Console.WindowWidth / 6) + (playerDepartment.Length / 2)) + "}", CapitalizeString(playerName)));
             Console.Write(String.Format("{0," + ((Console.WindowWidth / 6) + (playerDepartment.Length / 2)) + "} Department", CapitalizeString(playerDepartment)));
             string strength = $"Strength: {playerStrength}";
             Console.Write(String.Format("{0," + ((Console.WindowWidth / 6) + (strength.Length / 2)) + "}", strength));
             Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 6) + (playerCurrentHealth.ToString().Length / 2)) + "}/{1} HP", playerCurrentHealth, playerMaxHealth));
-            DrawLine(horizontalDoubleLine);
+            Console.WriteLine();
+            DrawLine('░');
         }
 
         /// <summary>

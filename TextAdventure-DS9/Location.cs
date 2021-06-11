@@ -108,5 +108,10 @@ namespace TextAdventure_DS9
 
             return null;
         }
+
+        public void AddItem(Item itemToAdd)
+        {
+            Items.Add(itemToAdd);
+        }
     }
 }

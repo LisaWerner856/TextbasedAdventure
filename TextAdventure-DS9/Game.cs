@@ -153,9 +153,10 @@ namespace TextAdventure_DS9
                 locationIndex += 1,
                 new List<Item>
                 {
-                    // Add items here
+                    new Item("Dust", "A few specks of dust are floating around.", false)
                 }
                 );
+            locations.Add(dockingRing);
             #endregion
 
             #region Operations
@@ -163,7 +164,7 @@ namespace TextAdventure_DS9
                 ("Ops",
                 new string[]
                 {
-                    "Operations "
+                    "It's quite busy"
                 },
                 locationIndex += 1,
                 new List<Item>
@@ -171,6 +172,7 @@ namespace TextAdventure_DS9
                     // Add items here
                 }
                 );
+            locations.Add(ops);
             #endregion
 
 
@@ -188,7 +190,7 @@ namespace TextAdventure_DS9
             promenade.AddExit(new Exit(turbolift));
             promenade.AddExit(new Exit(quarks));
             promenade.AddExit(new Exit(klingonRestaurant));
-            //promenade.AddExit(new Exit(garaksShop));
+            promenade.AddExit(new Exit(garaksShop));
 
             // Klingon Restaurant
             klingonRestaurant.AddExit(new Exit(promenade));
@@ -197,11 +199,14 @@ namespace TextAdventure_DS9
             quarks.AddExit(new Exit(promenade));
             // TODO:// Holosuites
 
+            // Garaks Tailor shop
+            garaksShop.AddExit(new Exit(promenade));
+
             // Dockingring
-            //dockingRing.AddExit(new Exit(turbolift));
+            dockingRing.AddExit(new Exit(turbolift));
 
             // Ops
-            //ops.AddExit(new Exit(turbolift));
+            ops.AddExit(new Exit(turbolift));
 
             #endregion
 
@@ -219,6 +224,7 @@ namespace TextAdventure_DS9
                 Console.WriteLine(intro[i]);
             }
             locations[player.currentLocation].ShowLocation();
+            Console.WriteLine(player.GetInventory());
         }
 
         /// <summary>
@@ -280,15 +286,6 @@ namespace TextAdventure_DS9
                     isRunning = false;
                     break;
 
-                // TODO: Interact with the items.
-                case "use":
-                    Console.WriteLine("Work in Progress");
-                    Console.WriteLine("Please specify what you want to use.");
-                    break;
-
-                //case "test go":
-                //    player.MoveLocation(1, locations);
-                //    break;
                 default:
                     //Console.WriteLine("Unknown command. Enter 'help'/'h' for more information.");
                     break;
