@@ -22,7 +22,7 @@ namespace TextAdventure_DS9
             {
                 game.Update();
             }
-            Console.WriteLine("Farewell.");
+            Console.WriteLine("The end.");
             Console.ReadKey();
         }
 

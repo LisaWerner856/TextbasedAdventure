@@ -73,7 +73,7 @@ namespace TextAdventure_DS9
                 locationIndex += 1,
                 new List<Item> 
                 { 
-                    new Item("Pillow", "There are a few gray, triangular pillows on the bed.", false) 
+                    new Item("Pillow", "There are a few gray, triangular pillows on the bed.", true) 
                 });
 
             locations.Add(playerQuarters);
@@ -106,7 +106,9 @@ namespace TextAdventure_DS9
                 locationIndex += 1, 
                 new List<Item> 
                 { 
-                    new Item("Latinum", "Something on the floor catches your eye. It's a bar of latinum.", true) 
+                    new Item("Latinum", "Something on the floor catches your eye. It's a bar of latinum.", true), 
+                    new Item("Dabo Table", "There are some dabo tables.", false),
+                    new Item("Bar", "A ferengin is tending the bar.", false)
                 });
 
             locations.Add(quarks);
@@ -190,6 +192,22 @@ namespace TextAdventure_DS9
             locations.Add(infirmary);
             #endregion
 
+            #region Brig
+            Location brig = new Location
+                ("Brig",
+                new string[]
+                {
+                    "The Brig. It's where people are heald if they break the rules"
+                },
+                locationIndex += 1,
+                new List<Item>
+                {
+                    new Item("Holding cell", "A few holding cell with two beds in it.", false)
+                }
+                );
+            locations.Add(brig);
+            #endregion
+
             #region Add exits
             // Turbolift 
             turbolift.AddExit(new Exit(playerQuarters));
@@ -206,6 +224,7 @@ namespace TextAdventure_DS9
             promenade.AddExit(new Exit(klingonRestaurant));
             promenade.AddExit(new Exit(garaksShop));
             promenade.AddExit(new Exit(infirmary));
+            promenade.AddExit(new Exit(brig));
 
             // Klingon Restaurant
             klingonRestaurant.AddExit(new Exit(promenade));
@@ -225,6 +244,9 @@ namespace TextAdventure_DS9
 
             // Infirmary
             infirmary.AddExit(new Exit(promenade));
+
+            // Brig
+            brig.AddExit(new Exit(promenade));
 
             #endregion
 
@@ -309,5 +331,6 @@ namespace TextAdventure_DS9
                     break;
             }
         }
+
     }
 }

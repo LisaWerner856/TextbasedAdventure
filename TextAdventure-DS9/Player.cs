@@ -176,6 +176,15 @@ namespace TextAdventure_DS9
                         {
                             if (item.Name.ToLower() == input.Substring(command.Length + 1))
                             {
+                                if (item.GetNameLowercase() == "pillow")
+                                {
+                                    Console.WriteLine("You take the pillow. It's surprisingly soft...");
+                                    Console.WriteLine("After squishing the pillow for a while you sit down on the bed.");
+                                    Console.WriteLine("It's more comfortable than it looks. You lay down. Your eyes feel pretty heavy...");
+                                    Console.WriteLine("Before you know it you fell asleep. Lets hope you wake up in time to report to duty...");
+                                    TakeDamage(Health);
+                                    return;
+                                }
                                 if (item.Useable)
                                 {
                                     Console.WriteLine($"\nYou take the {item.GetNameLowercase()}.");
@@ -268,7 +277,80 @@ namespace TextAdventure_DS9
 
                                         return;
                                     }
+                                    // Play at the dabo table.
+                                    if (secondItem == "dabo table" || secondItem == "dabo" && item.GetNameLowercase() == "latinum")
+                                    {
+                                        Console.WriteLine("You play dabo!");
+                                        Console.WriteLine("You have a nice relaxing evening at Quarks. You return to your quarters, happy and exicited for your first day of duty tomorrow!");
+
+// TODO: Win or lose based on a random number
+
+                                        return;
+                                    }
+
+                                    // Buy something at the bar.
+                                    if (secondItem == "bar" && item.GetNameLowercase() == "latinum")
+                                    {
+                                        #region Story: Bar
+                                        Console.WriteLine("You walk over to the bar to order. The Ferengi walks over to you and greets you.");
+                                        Console.WriteLine($"'Oh, you are the new arrival, fresh from the academy. Welcome to my bar!'");
+                                        Console.WriteLine("You nod.");
+                                        Console.WriteLine("'Feel free to try your luck at the dabo wheel! It's an excellent game. Just make sure you have enough latinum.'");
+                                        #endregion
+
+                                        // Create available items for purchase.
+                                        Item[] beverages = new Item[]
+                                        {
+                                            new Item("Beer", "A Human beverage called beer.", true),
+                                            new Item("Raktajino", "A combination of cappuccino and the Klingon drink ra'taj. It's quite popular.", true),
+                                            new Item("Bajoran ale", "A type of ale created by the Bajorans. It's not very potent.", true)
+                                        };
+
+                                        // Promt user for input.
+                                        string drink = Extentions.PromtForInput("'Anyways. Can I get you anything? If you want I can recommend you something.'\n").ToLower();
+                                        
+                                        switch (drink)
+                                        {
+                                            case "recommend":
+                                            case "recommend something":
+                                            case "recommend me something":
+                                                foreach (Item beverage in beverages)
+                                                {
+                                                    Console.WriteLine($"We have {beverage.Name}. {beverage.Description}");
+                                                }
+                                                drink = Extentions.PromtForInput("'Any of those sound good?'\n").ToLower();
+
+                                                break;
+                                            case "nevermind":
+                                            case "nothing":
+                                                Console.WriteLine("'Huu-mans' the Ferengi mumbles.");
+                                                Console.ReadKey();
+                                                return;
+                                        }
+
+                                        // Check if ordered drink is available.
+                                        foreach (Item beverage in beverages)
+                                        {
+                                            if (drink == beverage.GetNameLowercase())
+                                            {
+                                                RemoveItem("latinum");
+                                                Inventory.Add(beverage);
+                                            }
+                                        }
+
+                                        Console.Clear();
+                                        Extentions.UI(Name, Department, Strenght, MaxHealth, Health);
+                                        currentLocation.ShowLocation();
+                                        Console.WriteLine("You buy a drink!");
+                                        Console.WriteLine("You have a nice relaxing evening at Quarks. You return to your quarters, happy and exicited for your first day of duty tomorrow!");
+                                        Console.ReadKey();
+                                        TakeDamage(Health);
+                                        return;
+                                    }
+
+                                    // Go to your quarters and sleep
                                     
+
                                     return;
                                 }
                             }
