@@ -467,7 +467,7 @@ namespace TextAdventure_DS9
                                 {
                                     bool fight = false;
                                     Console.WriteLine("You enter the Klingon restaurant. As you walk to the table, you feel someone staring at you.");
-                                    switch (Extentions.PromtForInput("Do you want to ignore it?"))
+                                    switch (Extentions.PromtForInput("\nDo you want to ignore it?\n"))
                                     {
                                         case "y":
                                         case "yes":
@@ -475,6 +475,7 @@ namespace TextAdventure_DS9
                                             Console.WriteLine("You order todays special: Gagh. It's a Klingon delecacy made from serpent worms.");
                                             Console.WriteLine("After enjoying your meal you stoll around the promenade a bit more before getting tired.");
                                             Console.WriteLine("You head to your quarters and tuck in. Before your eyes shut you can't help but to wonder what your fist day of Duty will have in store for you.");
+                                            TakeDamage(Health); // Ghetto way of making the game end.
                                             break;
                                         case "n":
                                         case "no":
@@ -488,9 +489,10 @@ namespace TextAdventure_DS9
                                         Console.WriteLine("You stare right back at her.");
                                         Console.WriteLine("She gets up and yells something at you in Klingon. You don't understand what she's saying, so you just keep staring at her.");
                                         Console.WriteLine("It seems you have offended her. She gets up and walks over to you, looking ready to fight you.");
-                                        switch (Extentions.PromtForInput("The closer she's coming the scarier she's starting to look... Maybe you could apologize?"))
+                                        switch (Extentions.PromtForInput("\nThe closer she's coming the scarier she's starting to look... Maybe you could apologize?\n"))
                                         {
                                             case "fight":
+                                            case "no":
                                             case "fight her":
                                                 TakeDamage(new Random().Next(0, Health + 1));
                                                 Console.WriteLine("You feel her fist hit you right in the face. With full force you try and hit her back, but she only laughs.");
@@ -502,6 +504,7 @@ namespace TextAdventure_DS9
                                                 TakeDamage(Health);
                                                 return;
                                             case "apologize":
+                                            case "yes":
                                                 Console.WriteLine("She looks down on you disgust and scoffs. 'Humans', she says condecendingly before turning around and going back to her table.");
                                                 Console.WriteLine("You shrug and continue to yout table where a waiter takes your order.");
                                                 Console.WriteLine("After enjoying your meal you stoll around the promenade a bit more before getting tired.");
