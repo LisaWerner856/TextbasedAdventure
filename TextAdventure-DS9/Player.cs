@@ -444,7 +444,7 @@ namespace TextAdventure_DS9
                 if (input.Length >= command.Length && input.Substring(0, command.Length) == command)
                 {
 
-                    //If only the command was entered, promt a message for the user to specify which object they would like to pick up.
+                    //If only the command was entered, promt a message for the user to specify where they want to go.
                     if (input == command)
                     {
                         Console.WriteLine($"{message}");
@@ -475,6 +475,5 @@ namespace TextAdventure_DS9
             }
 
         }
-
     }
 }
