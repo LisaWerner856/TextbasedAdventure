@@ -226,7 +226,27 @@ namespace TextAdventure_DS9
                             {
                                 Console.WriteLine($"Use {item.GetNameLowercase()} on?");
                                 string secondItem = Console.ReadLine();
-                                
+
+                                if (secondItem == "myself" || secondItem == "self" && item.GetNameLowercase() == "phaser")
+                                {
+                                    TakeDamage(5);
+                                    Console.Clear();
+                                    Extentions.UI(Name, Department, Strenght, MaxHealth, Health);
+                                    currentLocation.ShowLocation();
+                                    Console.WriteLine($"You shoot yourself! What's wrong with you {Extentions.CapitalizeString(Name)}?!");
+                                    Console.WriteLine("Luckily your phaser was set to stun...");
+                                    Console.WriteLine("Security was called and you were taken to the infirmary.");
+                                    Console.WriteLine("Besides a small phaser burn you are fine. But you are temportarily relieved from duty... ");
+                                    Console.WriteLine("Your phaser is taken away and you have to see the counselor.");
+                                    //int targetLocatoin = Game.locations.FindIndex(x => x.GetLocationNameLowercase() == "infirmary");
+                                    //Console.WriteLine($"{targetLocatoin} target");
+
+                                    //Inventory.Remove(item);
+                                    TakeDamage(Health);
+
+                                    return;
+                                }
+
                                 if (currentLocation.Items.Exists(i => i.GetNameLowercase() == secondItem) || Inventory.Exists(i => i.GetNameLowercase() == secondItem))
                                 {
                                     Console.WriteLine("You use the item.");
@@ -248,6 +268,7 @@ namespace TextAdventure_DS9
 
                                         return;
                                     }
+                                    
                                     return;
                                 }
                             }

@@ -32,7 +32,7 @@ namespace TextAdventure_DS9
         /// <summary>
         /// List of all Locations.
         /// </summary>
-        public List<Location> locations = new List<Location>();
+        public static List<Location> locations = new List<Location>();
 
         private int locationIndex = 0;
 
@@ -175,6 +175,20 @@ namespace TextAdventure_DS9
             locations.Add(ops);
             #endregion
 
+            #region Infirmary
+            Location infirmary = new Location
+                ("Infirmary",
+                new string[]
+                {
+                "The stations infirmary. Doctor Julien Bashier works here."
+                },
+                locationIndex += 1,
+                new List<Item>
+                {
+                    new Item("Hypospray", "A medical device to inject liquids into the body. There is no vile attatched to it.", true)
+                });
+            locations.Add(infirmary);
+            #endregion
 
             #region Add exits
             // Turbolift 
@@ -191,6 +205,7 @@ namespace TextAdventure_DS9
             promenade.AddExit(new Exit(quarks));
             promenade.AddExit(new Exit(klingonRestaurant));
             promenade.AddExit(new Exit(garaksShop));
+            promenade.AddExit(new Exit(infirmary));
 
             // Klingon Restaurant
             klingonRestaurant.AddExit(new Exit(promenade));
@@ -207,6 +222,9 @@ namespace TextAdventure_DS9
 
             // Ops
             ops.AddExit(new Exit(turbolift));
+
+            // Infirmary
+            infirmary.AddExit(new Exit(promenade));
 
             #endregion
 

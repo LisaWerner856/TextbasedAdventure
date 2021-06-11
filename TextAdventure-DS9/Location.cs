@@ -56,6 +56,10 @@ namespace TextAdventure_DS9
                 Exits.Add(exit);
             }
         }
+        public void AddItem(Item itemToAdd)
+        {
+            Items.Add(itemToAdd);
+        }
 
         /// <summary>
         /// Writes location and items at the location to the console.
@@ -94,6 +98,10 @@ namespace TextAdventure_DS9
 
         }
 
+        public string GetLocationNameLowercase()
+        {
+            return LocationName;
+        }
 
         public Item RemoveItem(string itemToRemove)
         {
@@ -109,9 +117,5 @@ namespace TextAdventure_DS9
             return null;
         }
 
-        public void AddItem(Item itemToAdd)
-        {
-            Items.Add(itemToAdd);
-        }
     }
 }
