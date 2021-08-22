@@ -12,9 +12,9 @@ namespace TextAdventure_DS9
     class Game
     {
         private Player player;
-        public bool isRunning { get; private set; }
-
         private Random randomNumber = new Random();
+
+        public bool IsRunning { get; private set; }
 
         /// <summary>
         /// Game Constructor
@@ -44,7 +44,7 @@ namespace TextAdventure_DS9
         /// <param name="locationIndex"></param>
         public void Start()
         {
-            isRunning = true;
+            IsRunning = true;
 
             #region Location: Turbolift 
             Location turbolift = new Location
@@ -265,47 +265,68 @@ namespace TextAdventure_DS9
             {
                 Console.WriteLine(intro[i]);
             }
-            locations[player.currentLocation].ShowLocation();
+            locations[player.CurrentLocation].ShowLocation();
             Console.WriteLine(player.GetInventory());
         }
 
         /// <summary>
         /// Called when a new game loop starts.
         /// </summary>
-        public void Update()
+        public void Update() // Split the contents into 3 smaller methodes
         {
             if (player.Health <= 0)
             {
-                isRunning = false;
+                IsRunning = false;
+
                 return;
             }
 
             string input = Extentions.PromtForInput("");
 
+            bool validCommand;
+
             // Player adds item to their inventory and removes the item from the location.
-            player.TakeItem(locations[player.currentLocation], input, new string[] { "take", "pick up", "pickup" }, "Please specify what you would like to take.");
+            validCommand = player.TakeItem(locations[player.CurrentLocation], input, new string[] { "take", "pick up", "pickup" }, "Please specify what you would like to take."); // New string is made each update
 
             // Player removes item from their inventory and adds the item to the location.
-            player.DropItem(locations[player.currentLocation], input, new string[] { "drop" }, "Please specify what you would like to drop.");
+            validCommand = player.DropItem(locations[player.CurrentLocation], input, new string[] { "drop" }, "Please specify what you would like to drop.");
 
             // Player removes item from their inventory. 
-            player.UseItem(locations[player.currentLocation], input, new string[] { "use" }, "Please specify what you would like to use.");
+            validCommand = player.UseItem(locations[player.CurrentLocation], input, new string[] { "use" }, "Please specify what you would like to use.");
 
             // Player moves to a different location.
-            player.MoveLocation(input, new string[] { "go to", "goto", "move to", "moveto" }, "Please specify where you'd like to go.", locations);
+            validCommand = player.MoveLocation(input, new string[] { "go to", "goto", "move to", "moveto" }, "Please specify where you'd like to go.", locations);
 
+            if (validCommand)
+	        {
+                return;
+	        }
             switch (input)
             {
+                // Help info
+                case "help":
+                case "h":
+                case "commands":
+                    Console.WriteLine($"Take an item: take, pick up, pickup");
+                    Console.WriteLine($"Drop an item: drop");
+                    Console.WriteLine($"Use an item: use ");
+                    Console.WriteLine($"After entering which item you want to use enter the item you want to use it on.");
+                    Console.WriteLine($"Move location: go to, move to");
+                    Console.WriteLine($"Quit the game: q, quit");
+                    Console.WriteLine($"Show your inventory: i, inventory");
+                    Console.WriteLine($"Show the location again: l, look around. Recommended: look around after an action.");
+                    Console.WriteLine($"Hope this helps! Have fun.");
+                    break;
                 // Quit the game.
                 case "q":
                 case "quit":
 
-                    isRunning = false;
+                    IsRunning = false;
                     break;
 
                 // Display player inventory.
-                case "inventory":
                 case "i":
+                case "inventory":
                     foreach (Item item in player.Inventory)
                     {
                         Console.WriteLine(item.Name);
@@ -313,10 +334,9 @@ namespace TextAdventure_DS9
                     break;
 
                 // Write the location description and items at the location.
-                case "look around":
                 case "l":
-                case "location":
-                    locations[player.currentLocation].ShowLocation();
+                case "look around":
+                    locations[player.CurrentLocation].ShowLocation();
                     break;
 
                 // Player dies and it's Game over. Closes the game.
@@ -325,11 +345,11 @@ namespace TextAdventure_DS9
                 case "kill myself":
                     // make the player die based on a random death based on an array
                     Console.WriteLine("You die");
-                    isRunning = false;
+                    IsRunning = false;
                     break;
 
                 default:
-                    //Console.WriteLine("Unknown command. Enter 'help'/'h' for more information.");
+                    Console.WriteLine("Unknown command. Enter 'help'/'h' for more information.");
                     break;
             }
         }

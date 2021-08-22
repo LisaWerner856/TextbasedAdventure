@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,12 +19,10 @@ namespace TextAdventure_DS9
             Game game = new Game();
 
             game.Start();
-            while (game.isRunning)
+            while (game.IsRunning)
             {
                 game.Update();
             }
-            Console.WriteLine("The end.");
-            Console.ReadKey();
         }
 
     }

@@ -13,7 +13,7 @@ namespace TextAdventure_DS9
         /// <summary>
         /// Into text with the title and author.
         /// </summary>
-        private static string[] intro = new string[] { "A Deep Space 9 Textadventure Game", "C# Eindopdracht", "CrazyPumpkin", "\n", "\n", "Press 'Enter' to start" };
+        private static string[] intro = new string[] { "A Deep Space 9 Textadventure Game", "C# Eindopdracht", "CrazyPumpkin", "Enter 'help' if you are stuck", "→ Press 'Enter' to start ←" };
 
         /// <summary>
         /// ASCII art. String array.

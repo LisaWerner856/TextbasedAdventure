@@ -41,7 +41,7 @@ namespace TextAdventure_DS9
 
         public string[] Actions = new string[] { "take", "pickup", "use" };
 
-        public int currentLocation { get; private set; }
+        public int CurrentLocation { get; private set; }
 
         /// <summary>
         /// Create a new Player.
@@ -59,7 +59,7 @@ namespace TextAdventure_DS9
             Name = Extentions.PromtForInput("Please enter your name: ", "Your name can't be empty!");
             
             Department = SelectProfession(departments);
-            currentLocation = startingLocation;
+            CurrentLocation = startingLocation;
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace TextAdventure_DS9
         /// <param name="input">Player input</param>
         /// <param name="validCommands">Array of valid commands to execute this action</param>
         /// <param name="message">Message if the command needs more informations. Example: Input = take. Message = What do you want to take?</param>
-        public void TakeItem(Location currentLocation, string input, string[] validCommands, string message)
+        public bool TakeItem(Location currentLocation, string input, string[] validCommands, string message) //ref = references the memory address of the 'input', the variable 
         {
             // loop over all valid commands for taking an item.
             foreach (string command in validCommands)
@@ -166,7 +166,7 @@ namespace TextAdventure_DS9
                     if (input == command)
                     {
                         Console.WriteLine(message);
-                        return;
+                        return true;
                     }
 
                     // Check if the item exists in the current location
@@ -183,19 +183,19 @@ namespace TextAdventure_DS9
                                     Console.WriteLine("It's more comfortable than it looks. You lay down. Your eyes feel pretty heavy...");
                                     Console.WriteLine("Before you know it you fell asleep. Lets hope you wake up in time to report to duty...");
                                     TakeDamage(Health);
-                                    return;
+                                    return true;
                                 }
                                 if (item.Useable)
                                 {
                                     Console.WriteLine($"\nYou take the {item.GetNameLowercase()}.");
                                     Inventory.Add(item);
                                     currentLocation.Items.Remove(item);
-                                    return;
+                                    return true;
                                 }
                                 else
                                 {
                                     Console.WriteLine($"You can't take this.");
-                                    return;
+                                    return true;
                                 }
                             }
                         }
@@ -204,14 +204,15 @@ namespace TextAdventure_DS9
                     else
                     {
                         Console.WriteLine("\n" + input.Substring(command.Length + 1) + " does not exist.\n");
-                        return;
+                        return true;
                     }
                 }
             }
+            return false;
         }
 
 // Player action - use  item
-        public void UseItem(Location currentLocation, string input, string[] validCommands, string message)
+        public bool UseItem(Location currentLocation, string input, string[] validCommands, string message)
         {
             // loop over all valid commands for taking an item.
             foreach (string command in validCommands)
@@ -223,15 +224,15 @@ namespace TextAdventure_DS9
                     if (input == command)
                     {
                         Console.WriteLine(message);
-                        return;
+                        return true;
                     }
 
                     // Check if the item exists in the players inventory
                     if (Inventory.Exists(x => x.GetNameLowercase() == input.Substring(command.Length + 1)))
                     {
-                        foreach (Item item in Inventory)
+                        foreach (Item item in Inventory) // Make a 'DoAction' method to check this.
                         {
-                            if (item.Name.ToLower() == input.Substring(command.Length + 1) && item.Useable)
+                            if (item.Name.ToLower() == input.Substring(command.Length + 1) && item.Useable) // This could be a cutscene method. 
                             {
                                 Console.WriteLine($"Use {item.GetNameLowercase()} on?");
                                 string secondItem = Console.ReadLine();
@@ -253,7 +254,7 @@ namespace TextAdventure_DS9
                                     //Inventory.Remove(item);
                                     TakeDamage(Health);
 
-                                    return;
+                                    return true;
                                 }
 
                                 if (currentLocation.Items.Exists(i => i.GetNameLowercase() == secondItem) || Inventory.Exists(i => i.GetNameLowercase() == secondItem))
@@ -275,7 +276,7 @@ namespace TextAdventure_DS9
                                             RemoveItem(secondItem);
                                         }
 
-                                        return;
+                                        return true;
                                     }
                                     // Play at the dabo table.
                                     if (secondItem == "dabo table" || secondItem == "dabo" && item.GetNameLowercase() == "latinum")
@@ -285,7 +286,7 @@ namespace TextAdventure_DS9
 
 // TODO: Win or lose based on a random number
 
-                                        return;
+                                        return true;
                                     }
 
                                     // Buy something at the bar.
@@ -325,7 +326,7 @@ namespace TextAdventure_DS9
                                             case "nothing":
                                                 Console.WriteLine("'Huu-mans' the Ferengi mumbles.");
                                                 Console.ReadKey();
-                                                return;
+                                                return true;
                                         }
 
                                         // Check if ordered drink is available.
@@ -345,13 +346,13 @@ namespace TextAdventure_DS9
                                         Console.WriteLine("You have a nice relaxing evening at Quarks. You return to your quarters, happy and exicited for your first day of duty tomorrow!");
                                         Console.ReadKey();
                                         TakeDamage(Health);
-                                        return;
+                                        return true;
                                     }
 
-                                    // Go to your quarters and sleep
+                                    // TODO: Go to your quarters and sleep
                                     
 
-                                    return;
+                                    return true;
                                 }
                             }
                         }
@@ -360,10 +361,11 @@ namespace TextAdventure_DS9
                     else
                     {
                         Console.WriteLine($"You don't have {input.Substring(command.Length + 1)} in your inventory.");
-                        return;
+                        return true;
                     }
                 }
             }
+            return false;
         }
 
         /// <summary>
@@ -373,7 +375,7 @@ namespace TextAdventure_DS9
         /// <param name="input"></param>
         /// <param name="validCommands"></param>
         /// <param name="message"></param>
-        public void DropItem(Location currentLocation, string input, string[] validCommands, string message)
+        public bool DropItem(Location currentLocation, string input, string[] validCommands, string message)
         {
             // loop over all valid commands for taking an item.
             foreach (string command in validCommands)
@@ -385,7 +387,7 @@ namespace TextAdventure_DS9
                     if (input == command)
                     {
                         Console.WriteLine(message);
-                        return;
+                        return true;
                     }
 
                     // Check if the item exists in the current location
@@ -398,7 +400,7 @@ namespace TextAdventure_DS9
                                 Console.WriteLine($"\nYou dropped {item.Name}.");
                                 Inventory.Remove(item);
                                 currentLocation.Items.Add(item);
-                                return;
+                                return true;
                             }
                         }
                     }
@@ -406,10 +408,11 @@ namespace TextAdventure_DS9
                     else
                     {
                         Console.WriteLine($"You don't have a {input.Substring(command.Length + 1)} in your inventory.");
-                        return;
+                        return true;
                     }
                 }
             }
+            return false;
         }
 
         /// <summary>
@@ -419,10 +422,12 @@ namespace TextAdventure_DS9
         public string GetInventory()
         {
             string inventoryContent = "Inventory:\n";
+            Extentions.DrawLine(inventoryContent.Length);
             foreach (Item item in Inventory)
             {
-                inventoryContent += $"- {item.Name}\n";
+                inventoryContent += $"■ {item.Name}\n";
             }
+
             return inventoryContent;
         }
 
@@ -434,7 +439,7 @@ namespace TextAdventure_DS9
        /// <param name="message">Message to ask the user to specify where they want to go.</param>
        /// <param name="nextLocation">The locatoin to move to.</param>
        /// <param name="locations">List of locations in the Game.</param>
-        public void MoveLocation(string input, string[] validCommands, string message, List<Location> locations)
+        public bool MoveLocation(string input, string[] validCommands, string message, List<Location> locations)
         {
             // loop over all valid commands for moving.
             foreach (string command in validCommands)
@@ -448,20 +453,20 @@ namespace TextAdventure_DS9
                     if (input == command)
                     {
                         Console.WriteLine($"{message}");
-                        return;
+                        return true;
                     }
                     // Check if the exit exists in the current location
-                    if (locations[currentLocation].Exits.Exists(exit => exit.LeadsTo.LocationName.ToLower() == input.Substring(command.Length + 1)))
+                    if (locations[CurrentLocation].Exits.Exists(exit => exit.LeadsTo.LocationName.ToLower() == input.Substring(command.Length + 1)))
                     {
-                        foreach (Exit exit in locations[currentLocation].Exits)
+                        foreach (Exit exit in locations[CurrentLocation].Exits)
                         {
                             Console.WriteLine($"{exit.LeadsTo.LocationName.ToLower()} == {input.Substring(command.Length + 1)}");
                             if (exit.LeadsTo.LocationName.ToLower() == input.Substring(command.Length + 1))
                             {
-                                currentLocation = exit.LeadsTo.LocationIndex;
+                                CurrentLocation = exit.LeadsTo.LocationIndex;
                                 Console.Clear();
                                 Extentions.UI(Name, Department, Strenght, Health, MaxHealth);
-                                locations[currentLocation].ShowLocation();
+                                locations[CurrentLocation].ShowLocation();
 
                                 if (input.Substring(command.Length + 1) == "klingon restaurant")
                                 {
@@ -502,22 +507,22 @@ namespace TextAdventure_DS9
                                                 Extentions.UI(Name, Department, Strenght, Health, MaxHealth);
                                                 Console.WriteLine("You wake up in the Brig. Uh-Oh, you're going to be in trouble for getting into a fight...");
                                                 TakeDamage(Health);
-                                                return;
+                                                return true;
                                             case "apologize":
                                             case "yes":
                                                 Console.WriteLine("She looks down on you disgust and scoffs. 'Humans', she says condecendingly before turning around and going back to her table.");
                                                 Console.WriteLine("You shrug and continue to yout table where a waiter takes your order.");
                                                 Console.WriteLine("After enjoying your meal you stoll around the promenade a bit more before getting tired.");
                                                 Console.WriteLine("You head to your quarters and tuck in. Before your eyes shut you can't help but to wonder what your fist day of Duty will have in store for you.");
-                                                return;
+                                                return true;
                                         }
                                     }
 
                                 }
-                                return;
+                                return true;
                             }
                         }
-                        return;
+                        return true;
                     }
                     else
                     {
@@ -525,6 +530,7 @@ namespace TextAdventure_DS9
                     }
                 }
             }
+            return false;
 
         }
     }
