@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
+using System.Runtime.InteropServices;
 
 
 namespace TextAdventure_DS9
@@ -107,8 +108,10 @@ namespace TextAdventure_DS9
         /// <param name="height">Optional: The height of the console window. Default value is 45</param>
         public static void ConsoleStartScreen(int width = 150, int height = 45)
         {
-            // Set the console size.
-            Console.SetWindowSize(width, height);
+            // TODO: FIX, THIS ONLY WORKS ON WINDOWS  
+            // Set the console size
+            // Console.SetWindowSize(width, height);
+            
 
             // Display the ASCII.
             CenterText(ASCII);
